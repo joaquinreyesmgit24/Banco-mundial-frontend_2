@@ -18,6 +18,7 @@
     import "vue-good-table-next/dist/vue-good-table-next.css";
     import { useToast } from "vue-toastification";
     import dayjs from "dayjs"; // Importa dayjs
+    
     export default {
         name: "list-users",
         components: {
@@ -49,56 +50,42 @@
                         field: "id",
                     },
                     {
-                        label: "Q_S10",
-                        field: "Q_S10",
+                        label: "Q_1",
+                        field: "Q_1",
                     },
                     {
-                        label: "Q_S8",
-                        field: "Q_S8",
+                        label: "Q_2",
+                        field: "Q_2",
                     },
                     {
-                        label: "Q_S9",
-                        field: "Q_S9",
+                        label: "Q_3",
+                        field: "Q_3",
                     },
                     {
-                        label: "Q_S4",
-                        field: "Q_S4",
+                        label: "Q_4",
+                        field: "Q_4",
+                        type: "date",
+                        dateInputFormat: "dd-MM-yyyy",
+                        dateOutputFormat: "dd-MM-yyyy",
                     },
                     {
-                        label: "Q_S7",
-                        field: "Q_S7",
+                        label: "Q_5",
+                        field: "Q_5",
                     },
                     {
-                        label: "Q_A7",
-                        field: "Q_A7",
+                        label: "Q_6",
+                        field: "Q_6",
                     },
                     {
-                        label: "Q_A7A",
-                        field: "Q_A7A",
+                        label: "Q_7",
+                        field: "Q_7",
                     },
                     {
-                        label: "Q_A7B",
-                        field: "Q_A7B",
-                    },
-                    {
-                        label: "Q_A11",
-                        field: "Q_A11",
-                    },
-                    {
-                        label: "Q_A7C",
-                        field: "Q_A7C",
-                    },
-                    {
-                        label: "Q_A7D_address",
-                        field: "Q_A7D_address",
-                    },
-                    {
-                        label: "Q_A7D_estab_name",
-                        field: "Q_A7D_estab_name",
-                    },
-                    {
-                        label: "Q_A9",
-                        field: "Q_A9",
+                        label: "Fecha de creación",
+                        field: "date",
+                        type: "date",
+                        dateInputFormat: "dd-MM-yyyy HH:mm:ss",
+                        dateOutputFormat: "dd-MM-yyyy",
                     },
                     {
                         label: "status",
@@ -115,25 +102,20 @@
         },
         methods: {
             getDataSurveys() {
-                GlobalService.getData("/survey/list-surveys")
+                GlobalService.getData("/survey/list-survey")
                     .then((response) => {
+                        console.log(response.surveys)
                         this.rows = response.surveys.map((survey) => ({
                         id: survey.id,
-                        Q_S10:survey.Q_S10,
-                        Q_S8:survey.Q_S8,
-                        Q_S9:survey.Q_S9,
-                        Q_S4:survey.Q_S4,
-                        Q_S7:survey.Q_S7,
-                        Q_A7:survey.Q_A7,
-                        Q_A7A:survey.Q_A7A,
-                        Q_A7B:survey.Q_A7B,
-                        Q_A11:survey.Q_A11,
-                        Q_A7C:survey.Q_A7C,
-                        Q_A7D_address:survey.Q_A7D_address,
-                        Q_A7D_estab_name:survey.Q_A7D_estab_name,
-                        Q_A9:survey.Q_A9,
+                        Q_1:survey.Q_1,
+                        Q_2:survey.Q_2,
+                        Q_3:survey.Q_3,
+                        Q_4:dayjs(survey.Q_4).format("DD-MM-YYYY"),
+                        Q_5:survey.Q_5,
+                        Q_6:survey.Q_6,
+                        Q_7:survey.Q_7,
                         status:survey.status,
-                        fecha:dayjs(survey.createdAt).format("DD-MM-YYYY HH:mm:ss"),
+                        date:dayjs(survey.createdAt).format("DD-MM-YYYY HH:mm:ss"),
                         }));
                     })
                     .catch((error) => {

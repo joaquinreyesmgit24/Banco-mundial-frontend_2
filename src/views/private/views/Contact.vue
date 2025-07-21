@@ -509,7 +509,7 @@
                 this.isModalOpen = false;
             },
             createCall(call, option) {
-               call.companyStreetUpdate = this.survey.companyStreetUpdate;
+            call.companyStreetUpdate = this.survey.companyStreetUpdate;
                 if(option=='agregar-incidencia'){
                     GlobalService.createData("/call/create-call", call)
                         .then((response) => {
