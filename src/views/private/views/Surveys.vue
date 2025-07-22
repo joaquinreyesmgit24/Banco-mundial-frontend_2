@@ -80,6 +80,14 @@
                         label: "Q_7",
                         field: "Q_7",
                     },
+                                        {
+                        label: "Q_8",
+                        field: "Q_8",
+                    },
+                                        {
+                        label: "Q_9",
+                        field: "Q_9",
+                    },
                     {
                         label: "Fecha de creación",
                         field: "date",
@@ -114,6 +122,8 @@
                         Q_5:survey.Q_5,
                         Q_6:survey.Q_6,
                         Q_7:survey.Q_7,
+                        Q_8:survey.Q_8,
+                        Q_9:survey.Q_9,
                         status:survey.status,
                         date:dayjs(survey.createdAt).format("DD-MM-YYYY HH:mm:ss"),
                         }));
