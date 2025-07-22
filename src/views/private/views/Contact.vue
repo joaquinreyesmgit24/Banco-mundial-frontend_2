@@ -269,28 +269,42 @@
 
                             <div>
                                 <label class="block text-gray-700 text-sm font-bold mb-2" for="fechaC">FECHA DE LA
-                                    CITA:</label>
+                                    CITA (OBLIGATORIO):</label>
                                 <input type="date" id="fechaC" v-model="survey.Q_4"
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                             </div>
                             <div>
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="horaC">HORA:</label>
-                                <input type="time" id="horaC" v-model="survey.Q_5" :disabled="Q_4"
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="horaC">HORA (OBLIGATORIO):</label>
+                                <input type="time" id="horaC" v-model="survey.Q_5" :disabled="!survey.Q_4"
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                             </div>
                             <div>
                                 <label class="block text-gray-700 text-sm font-bold mb-2" for="nombreE">NOMBRE DEL
-                                    ENTREVISTADO:</label>
+                                    ENTREVISTADO (OBLIGATORIO):</label>
                                 <input type="text" id="nombreE" v-model="survey.Q_6"
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    :disabled="Q_5" placeholder="Nombre">
+                                    :disabled="!survey.Q_5" placeholder="Nombre">
                             </div>
                             <div>
                                 <label class="block text-gray-700 text-sm font-bold mb-2" for="cargoE">CARGO DEL
-                                    ENTREVISTADO:</label>
+                                    ENTREVISTADO (OBLIGATORIO):</label>
                                 <input type="text" id="cargoE" v-model="survey.Q_7"
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    :disabled="Q_6" placeholder="Cargo">
+                                    :disabled="!survey.Q_6" placeholder="Cargo">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="cargoE">CORREO DEL
+                                    ENTREVISTADO (OBLIGATORIO):</label>
+                                <input type="text" id="correoE" v-model="survey.Q_8"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    :disabled="!survey.Q_7" placeholder="Correo">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="cargoE">CELULAR DEL
+                                    ENTREVISTADO (OPCIONAL):</label>
+                                <input type="text" id="celularE" v-model="survey.Q_9"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    :disabled="!survey.Q_8" placeholder="Celular">
                             </div>
                         </div>
                         <label for="mainSelect"
@@ -308,7 +322,7 @@
                             <button type="submit" @click="createCall(call,'empresa-no-elegible')"
                                 class="w-full mt-4 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">La empresa no es elegible</button>
                         </div>
-                        <div v-if="(participate && survey.selectedMainStatus!='' && survey.Q_1!='' && survey.Q_2!='' && survey.Q_3!='' && survey.Q_4!='' && survey.Q_5!=''&& survey.Q_6!=''&& survey.Q_7!='') && (survey.Q_1==2 && survey.Q_2!=-9 && survey.Q_3>=5)"
+                        <div v-if="(participate && survey.selectedMainStatus!='' && survey.Q_1!='' && survey.Q_2!='' && survey.Q_3!='' && survey.Q_4!='' && survey.Q_5!=''&& survey.Q_6!=''&& survey.Q_7!='' && survey.Q_8!='') && (survey.Q_1==2 && survey.Q_2!=-9 && survey.Q_3>=5)"
                             class="flex justify-center">
                             <button type="submit" @click="createCall(call,'finalizar')"
                                 class="w-full mt-4 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Finalizar
@@ -426,6 +440,8 @@
                     Q_5: "",
                     Q_6: "",
                     Q_7: "",
+                    Q_8:"",
+                    Q_9:"",
                     selectedMainStatus: "",
                     selectedSubStatus: "",
                     companyStreetUpdate: "",
@@ -494,6 +510,8 @@
                     Q_5: "",
                     Q_6: "",
                     Q_7: "",
+                    Q_8:"",
+                    Q_9:"",
                     selectedMainStatus: "",
                     selectedSubStatus: "",
                     companyStreetUpdate: this.survey.companyStreetUpdate
