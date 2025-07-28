@@ -3,7 +3,18 @@
         <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
             <div class="text-2xl font-semibold mb-4">Encuestas</div>
             <VueGoodTable :columns="columns" :rows="rows" :search-options="searchOptions"
-                :pagination-options="paginationOptions" max-height="450px" :fixed-header="true">
+                :pagination-options="paginationOptions" max-height="450px">
+                <template v-slot:table-row="props">
+                    <span v-if="props.column.field == 'companyRut'">
+                        {{ props.row.company.rut }}    
+                    </span>
+                    <span v-if="props.column.field == 'companyName'">
+                        {{ props.row.company.name }}    
+                    </span>
+                    <span v-if="props.column.field == 'companyCode'">
+                        {{ props.row.company.code }}    
+                    </span>
+                </template>
                 <template v-slot:emptystate>
                     <div style="text-align: center">No hay datos disponibles</div>
                 </template>
@@ -80,13 +91,25 @@
                         label: "Q_7",
                         field: "Q_7",
                     },
-                                        {
+                {
                         label: "Q_8",
                         field: "Q_8",
                     },
-                                        {
+                {
                         label: "Q_9",
                         field: "Q_9",
+                    },
+                    {
+                        label: "Rut de la compañia",
+                        field: "companyRut",
+                    },
+                    {
+                        label: "Nombre de la compañia",
+                        field: "companyName",
+                    },
+                    {
+                        label: "code de la compañia",
+                        field: "companyCode",
                     },
                     {
                         label: "Fecha de creación",
@@ -112,7 +135,7 @@
             getDataSurveys() {
                 GlobalService.getData("/survey/list-survey")
                     .then((response) => {
-                        console.log(response.surveys)
+                        console.log(response)
                         this.rows = response.surveys.map((survey) => ({
                         id: survey.id,
                         Q_1:survey.Q_1,
@@ -124,6 +147,7 @@
                         Q_7:survey.Q_7,
                         Q_8:survey.Q_8,
                         Q_9:survey.Q_9,
+                        company: survey.company,
                         status:survey.status,
                         date:dayjs(survey.createdAt).format("DD-MM-YYYY HH:mm:ss"),
                         }));

@@ -10,7 +10,7 @@
             </div>
             <div class="text-2xl font-semibold mb-4">Usuarios</div>
             <VueGoodTable :columns="columns" :rows="rows" :search-options="searchOptions"
-                :pagination-options="paginationOptions" max-height="450px" :fixed-header="true">
+                :pagination-options="paginationOptions" max-height="450px">
                 <template v-slot:table-row="props">
                     <span v-if="props.column.field == 'acciones'">
                         <button type="button"
