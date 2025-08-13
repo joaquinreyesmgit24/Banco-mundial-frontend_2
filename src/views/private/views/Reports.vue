@@ -70,7 +70,36 @@ export default {
         getDataReports() {
             GlobalService.getData("/report/list-reports")
                 .then((response) => {
-                 console.log(response.reports)
+                    const eligibilityDescriptions = {
+                        1: "Establecimiento elegible (Nombre y dirección correctos)",
+                        2: "Establecimiento elegible (Nombre diferente pero misma dirección - la nueva",
+                        3: "Establecimiento elegible (Nombre diferente pero misma dirección - la empresa/establecimiento ha cambiado de nombre)",
+                        4: "Establecimiento elegible (Trasladado y localizado)",
+                        5: "El establecimiento tiene menos de 5 empleados permanentes",
+                        6: "No contesta",
+                        7: "Reprogramar llamado",
+                        10: "Contestador automático",
+                        11: "Línea de fax - línea de datos",
+                        12: "Dirección incorrecta/se mudó y no se pudo conseguir información",
+                        13: "Se niega a responder al cuestionario de selección",
+                        14: "En proceso (se está llamando al establecimiento/se está procesando)",
+                        71: "Estatus legal no elegible: no es una empresa, sino un hogar privado",
+                        91: "Sin respuesta después de haber llamado en diferentes ocasiones",
+                        92: "Línea fuera de servicio",
+                        93: "No timbra",
+                        94: "El número de teléfono no existe",
+                        133: "Rechazo - número en lista negra",
+                        151: "Fuera del objetivo: fuera de las regiones cubiertas",
+                        152: "Fuera del objetivo: trasladado al extranjero",
+                        155: "Fuera del objetivo - el establecimiento no estuvo disponible",
+                        156: "Empresa duplicada dentro de la muestra",
+                        616: "La empresa dejó de funcionar - (El establecimiento quebró)",
+                        618: "La empresa dejó de funcionar - (El establecimiento original desapareció y ahora es una empresa diferente)",
+                        619: "La empresa dejó de funcionar - (El establecimiento fue comprado por otra empresa)",
+                        620: "La empresa dejó de funcionar - (No se pudo determinar)",
+                        621: "La empresa dejó de funcionar - (Otros)",
+                    };
+
                     this.rows = response.reports.map((report) => ({
                         id: report.id,
                         countryName: report.countryName,
@@ -84,6 +113,7 @@ export default {
                         panelName: report.panelName,
                         panelCode: report.panelCode,
                         eligibilityCode: report.eligibilityCode,
+                        eligibilityName: eligibilityDescriptions[report.eligibilityCode] || "Descripción no disponible", // Asignación basada en el código
                         statusCode: report.statusCode,
                         rejectionCode: report.rejectionCode,
                         companyName: report.companyName,
@@ -119,6 +149,7 @@ export default {
                 panelName: 'Nombre del Panel',
                 panelCode: 'Código del Panel',
                 eligibilityCode: 'Código de Elegibilidad',
+                eligibilityName: 'Nombre de Elegibilidad',
                 statusCode: 'Código de Estado',
                 rejectionCode: 'Código de Rechazo',
                 locality: 'Localidad',
