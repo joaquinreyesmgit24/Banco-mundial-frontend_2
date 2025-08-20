@@ -8,12 +8,11 @@
                 <span v-else>No hay empresas disponibles para contactar</span>
                 <i class="ri-error-warning-fill ml-2"></i>
             </h2>
-            <form v-else @submit.prevent
-                class="border border-neutral-200 rounded-md p-4 md:p-5 bg-neutral-50">
+            <form v-else @submit.prevent class="border border-neutral-200 rounded-md p-4 md:p-5 bg-neutral-50">
                 <div class="grid gap-2 mb-4 grid-cols-2">
                     <div class="col-span-2 mb-3">
                         <h2 class="font-bold mb-4 text-center">INTRODUCCIÓN</h2>
-                        <p class="text-gray-600 text-center mb-5">
+                        <p class="text-gray-600 text-center mb-5 font-bold">
                             <span class="text-blue-500">(Buenos días/Buenas tardes/Buenas noches)</span>. Le llamo de la
                             empresa Datavoz, en nombre del Banco Mundial. Estamos
                             llevando a cabo una encuesta del sector privado en chile
@@ -70,6 +69,30 @@
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 placeholder-gray-400 focus:ring-primary-500"
                             placeholder="Ingresar nueva dirección" v-model="survey.companyStreetUpdate" />
                     </div>
+                    <div class="col-span-2 mb-3">
+                        <div class="col-span-2 mb-3">
+                            <label for="emailSendTo" class="block mb-2 text-sm font-bold text-blue-600">
+                                ¿Desea recibir algún correo con la información?:
+                            </label>
+                            <div class="flex space-x-2">
+                                <input type="email" name="emailSendTo" id="emailSendTo" placeholder="Ingresar correo electrónico"
+                                    v-model.trim="emailToSend.to"
+                                    class="flex-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5 placeholder-gray-400" />
+
+                                <button type="button"
+                                @click="sendEmail()"
+                                    class="bg-blue-600 text-white text-sm px-4 py-2 rounded-lg hover:bg-violet-800 transition">
+                                    Enviar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-if="!participate && survey.selectedMainStatus ==2 &&  survey.selectedSubStatus == ''"
+                        class="flex justify-center">
+                        <button @click="createCall(call, 'no-desea-participar')"
+                            class="w-full mt-4 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">No
+                            desea participar</button>
+                    </div>
                 </div>
                 <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div class="bg-white p-6 rounded-md w-5xl ml-20 max-h-[80vh] overflow-auto">
@@ -78,7 +101,8 @@
                             <label for="participate" class="block mb-2 text-sm font-medium text-gray-900">¿Quiere
                                 participar
                                 del estudio?</label>
-                            <input type="checkbox" @change="handleParticipateChange" id="participate" v-model="participate" class="mr-2" />
+                            <input type="checkbox" @change="handleParticipateChange" id="participate"
+                                v-model="participate" class="mr-2" />
                             <span>Sí</span>
                         </div>
                         <label for="mainSelect"
@@ -248,12 +272,14 @@
                                 CITA:</label>
                             <label class="block text-gray-700 text-sm mb-2">Nos gustaría programar una cita para una
                                 entrevista. El
-                                propósito de esta encuesta es comprender mejor <br> las condiciones de las empresas privadas
+                                propósito de esta encuesta es comprender mejor <br> las condiciones de las empresas
+                                privadas
                                 y
                                 cómo
                                 afectan la productividad y el crecimiento.<br> Sus respuestas y las de otros líderes
                                 empresariales
-                                ayudarán a diseñar nuevas políticas <br> y programas para mejorar el entorno empresarial.
+                                ayudarán a diseñar nuevas políticas <br> y programas para mejorar el entorno
+                                empresarial.
                                 Toda la
                                 información que proporcione será anónima <br> y ni su nombre ni el nombre de su
                                 establecimiento
@@ -274,7 +300,8 @@
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                             </div>
                             <div>
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="horaC">HORA (OBLIGATORIO):</label>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="horaC">HORA
+                                    (OBLIGATORIO):</label>
                                 <input type="time" id="horaC" v-model="survey.Q_5" :disabled="!survey.Q_4"
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                             </div>
@@ -320,7 +347,8 @@
                         <div v-if="(participate && (survey.selectedMainStatus!=2 && survey.selectedMainStatus!=3)) && (survey.Q_1==1 || survey.Q_2==-9 || (survey.Q_3!='' && survey.Q_3<5))"
                             class="flex justify-center">
                             <button type="submit" @click="createCall(call,'empresa-no-elegible')"
-                                class="w-full mt-4 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">La empresa no es elegible</button>
+                                class="w-full mt-4 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">La
+                                empresa no es elegible</button>
                         </div>
                         <div v-if="(participate && survey.selectedMainStatus!='' && survey.Q_1!='' && survey.Q_2!='' && survey.Q_3!='' && survey.Q_4!='' && survey.Q_5!=''&& survey.Q_6!=''&& survey.Q_7!='' && survey.Q_8!='') && (survey.Q_1==2 && survey.Q_2!=-9 && survey.Q_3>=5)"
                             class="flex justify-center">
@@ -328,13 +356,15 @@
                                 class="w-full mt-4 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Finalizar
                                 encuesta</button>
                         </div>
-                        <div v-if="!participate && survey.selectedMainStatus ==3 &&  survey.selectedSubStatus != ''" class="flex justify-center">
+                        <div v-if="!participate && survey.selectedMainStatus ==3 &&  survey.selectedSubStatus != ''"
+                            class="flex justify-center">
                             <button @click="createCall(call, 'no-desea-participar')"
                                 class="w-full mt-4 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">No
                                 desea participar</button>
                         </div>
-                                                
-                        <div v-if="!participate && survey.selectedMainStatus ==2 &&  survey.selectedSubStatus == ''" class="flex justify-center">
+
+                        <div v-if="!participate && survey.selectedMainStatus ==2 &&  survey.selectedSubStatus == ''"
+                            class="flex justify-center">
                             <button @click="createCall(call, 'no-desea-participar')"
                                 class="w-full mt-4 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">No
                                 desea participar</button>
@@ -360,7 +390,7 @@
                     <input type="time" name="reschedulingTime" id="reschedulingTime" v-model="call.rescheduled.time"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 placeholder-gray-400 focus:ring-primary-500" />
                 </div>
-                <button type="submit" @click="createCall(call,'agregar-incidencia')"  v-if="call.incidenceId === 7"
+                <button type="submit" @click="createCall(call,'agregar-incidencia')" v-if="call.incidenceId === 7"
                     class="w-full text-white bg-lime-500 hover:bg-lime-600 focus:ring-4 focus:outline-none focus:ring-violet-300 font-medium rounded-lg text-sm py-2.5 mb-6 text-center">
                     Reprogramar llamado
                 </button>
@@ -440,8 +470,8 @@
                     Q_5: "",
                     Q_6: "",
                     Q_7: "",
-                    Q_8:"",
-                    Q_9:"",
+                    Q_8: "",
+                    Q_9: "",
                     selectedMainStatus: "",
                     selectedSubStatus: "",
                     companyStreetUpdate: "",
@@ -454,6 +484,10 @@
                 toast: useToast(),
                 showRejectButton: true,
                 buttonNext: false,
+                emailToSend:{
+                    to:"",
+                    companyName: ""
+                },
                 call: {
                     phone: "",
                     comment: "",
@@ -510,8 +544,8 @@
                     Q_5: "",
                     Q_6: "",
                     Q_7: "",
-                    Q_8:"",
-                    Q_9:"",
+                    Q_8: "",
+                    Q_9: "",
                     selectedMainStatus: "",
                     selectedSubStatus: "",
                     companyStreetUpdate: this.survey.companyStreetUpdate
@@ -526,9 +560,32 @@
             closeModal() {
                 this.isModalOpen = false;
             },
+            sendEmail(){
+                 // Verificar si el campo de correo electrónico está vacío o tiene un formato incorrecto
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!this.emailToSend.to || !emailRegex.test(this.emailToSend.to)) {
+                    this.toast.error('Por favor ingrese un correo electrónico válido.');
+                    return;  // No enviar si el correo es inválido o vacío
+                }
+                this.emailToSend.companyName = this.randomCompany.name
+                GlobalService.createData("/call/send-email", this.emailToSend).then((response)=>{
+                this.toast.success(response.data.msg);
+                }).catch((e) => {
+                            let errors = e.response.data.errors;
+                            let error = e.response.data.error;
+                            console.log(errors)
+                            if (errors) {
+                                errors.forEach((error_element) => {
+                                    this.toast.error(error_element.msg);
+                                });
+                            } else {
+                                this.toast.error(error);
+                            }
+                        })
+            },
             createCall(call, option) {
-            call.companyStreetUpdate = this.survey.companyStreetUpdate;
-                if(option=='agregar-incidencia'){
+                call.companyStreetUpdate = this.survey.companyStreetUpdate;
+                if (option == 'agregar-incidencia') {
                     GlobalService.createData("/call/create-call", call)
                         .then((response) => {
                             this.toast.success(response.data.msg);
@@ -550,24 +607,24 @@
                             }
                         })
                 }
-                if(option=='no-desea-participar' || option=='finalizar' ||  option=='empresa-no-elegible'){
-                    this.survey.incidenceId=this.call.incidenceId
+                if (option == 'no-desea-participar' || option == 'finalizar' || option == 'empresa-no-elegible') {
+                    this.survey.incidenceId = this.call.incidenceId
                     GlobalService.createData("/survey/create-survey", this.survey).then((response) => {
                         window.location.reload()
                     })
-                    .catch((e) => {
-                        let errors = e.response.data.errors;
-                        let error = e.response.data.error;
-                        if (errors) {
-                            errors.forEach((error_element) => {
-                                this.toast.error(error_element.msg);
-                            });
-                        } else {
-                            this.toast.error(error);
-                        }
-                    })
+                        .catch((e) => {
+                            let errors = e.response.data.errors;
+                            let error = e.response.data.error;
+                            if (errors) {
+                                errors.forEach((error_element) => {
+                                    this.toast.error(error_element.msg);
+                                });
+                            } else {
+                                this.toast.error(error);
+                            }
+                        })
                 }
-                    
+
             },
             getDataIncidents() {
                 GlobalService.getData("/call/list-incidents")
@@ -583,7 +640,7 @@
                     .then((response) => {
                         this.randomCompany = response
                         this.call.companyId = response.id
-                        this.survey.companyId =response.id
+                        this.survey.companyId = response.id
                         this.call.phone = response.phoneNumberOne
                         this.getDataCalls(response.id)
                     })
@@ -596,7 +653,7 @@
                     .then((response) => {
                         this.randomCompany = response
                         this.call.companyId = response.id
-                        this.survey.companyId =response.id
+                        this.survey.companyId = response.id
                         this.call.phone = response.phoneNumberOne
                         this.getDataCalls(response.id)
                     })
