@@ -8,7 +8,7 @@
                 </button>
             </div>
             <VueGoodTable :columns="columns" :rows="rows" :search-options="searchOptions"
-                :pagination-options="paginationOptions" max-height="450px" :fixed-header="true">
+                :pagination-options="paginationOptions" max-height="450px" >
                 <template v-slot:emptystate>
                     <div style="text-align: center">No hay datos disponibles</div>
                 </template>
@@ -59,6 +59,7 @@ export default {
                 { label: "Dirección", field: "address" },
                 { label: "Teléfono 1", field: "phoneNumberOne" },
                 { label: "Teléfono 2", field: "phoneNumberSecond" },
+                { label: "Encuestador", field: "username" },
             ],
             rows: [],
         };
@@ -99,7 +100,6 @@ export default {
                         620: "La empresa dejó de funcionar - (No se pudo determinar)",
                         621: "La empresa dejó de funcionar - (Otros)",
                     };
-
                     this.rows = response.reports.map((report) => ({
                         id: report.id,
                         countryName: report.countryName,
@@ -129,6 +129,7 @@ export default {
                         web: report.web,
                         companyStreetUpdate: report.companyStreetUpdate,
                         date: dayjs(report.createdAt).format("DD-MM-YYYY HH:mm:ss"),
+                        username: report.company.user.username,
                     }))
                 })
                 .catch((error) => {
@@ -164,6 +165,7 @@ export default {
                 web: 'Página Web',
                 companyStreetUpdate: 'Dirreción de la Compañía (Actualización)',
                 date: 'Fecha de Creación',
+                username: 'Encuestador',
             };
             const formattedRows = this.rows.map((row) => {
                 const formattedRow = {};

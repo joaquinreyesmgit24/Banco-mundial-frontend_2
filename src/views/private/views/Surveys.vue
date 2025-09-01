@@ -1,7 +1,12 @@
 <template>
     <div class="grid grid-cols-1 gap-6 mb-6">
         <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
-            <div class="text-2xl font-semibold mb-4">Encuestas</div>
+            <div class="flex justify-between items-center mb-4">
+                <div class="text-2xl font-semibold mb-4">Encuestas</div>
+                <button class="text-white inline-flex items-center bg-lime-500 hover:bg-lime-600 focus:ring-4 focus:outline-none focus:ring-violet-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center" @click="downloadSurveys">
+                    Descargar Encuestas (Excel)
+                </button>
+            </div>
             <VueGoodTable :columns="columns" :rows="rows" :search-options="searchOptions"
                 :pagination-options="paginationOptions" max-height="450px">
                 <template v-slot:table-row="props">
@@ -24,11 +29,12 @@
 </template>
 
 <script>
-    import GlobalService from "../../../services/GlobalServices";
-    import { VueGoodTable } from "vue-good-table-next";
-    import "vue-good-table-next/dist/vue-good-table-next.css";
-    import { useToast } from "vue-toastification";
-    import dayjs from "dayjs"; // Importa dayjs
+import GlobalService from "../../../services/GlobalServices";
+import { VueGoodTable } from "vue-good-table-next";
+import "vue-good-table-next/dist/vue-good-table-next.css";
+import { useToast } from "vue-toastification";
+import dayjs from "dayjs"; // Importa dayjs
+import * as XLSX from "xlsx"; // Importa la librería de xlsx
     
     export default {
         name: "list-users",
@@ -108,7 +114,7 @@
                         field: "companyName",
                     },
                     {
-                        label: "code de la compañia",
+                        label: "Code de la compañia",
                         field: "companyCode",
                     },
                     {
@@ -119,8 +125,12 @@
                         dateOutputFormat: "dd-MM-yyyy",
                     },
                     {
-                        label: "status",
+                        label: "Estado",
                         field: "status",
+                    },
+                    {
+                        label: "Encuestador",
+                        field: "username",
                     },
                 ],
                 rows: [],
@@ -135,27 +145,73 @@
             getDataSurveys() {
                 GlobalService.getData("/survey/list-survey")
                     .then((response) => {
-                        console.log(response)
                         this.rows = response.surveys.map((survey) => ({
-                        id: survey.id,
-                        Q_1:survey.Q_1,
-                        Q_2:survey.Q_2,
-                        Q_3:survey.Q_3,
-                        Q_4:dayjs(survey.Q_4).format("DD-MM-YYYY"),
-                        Q_5:survey.Q_5,
-                        Q_6:survey.Q_6,
-                        Q_7:survey.Q_7,
-                        Q_8:survey.Q_8,
-                        Q_9:survey.Q_9,
-                        company: survey.company,
-                        status:survey.status,
-                        date:dayjs(survey.createdAt).format("DD-MM-YYYY HH:mm:ss"),
+                            id: survey.id,
+                            Q_1: survey.Q_1,
+                            Q_2: survey.Q_2,
+                            Q_3: survey.Q_3,
+                            // Validar si la fecha es válida, si no es válida, dejarla vacía
+                            Q_4: dayjs(survey.Q_4).isValid() ? dayjs(survey.Q_4).format("DD-MM-YYYY") : "", // Aquí se maneja el caso "Invalid Date"
+                            Q_5: survey.Q_5,
+                            Q_6: survey.Q_6,
+                            Q_7: survey.Q_7,
+                            Q_8: survey.Q_8,
+                            Q_9: survey.Q_9,
+                            company: survey.company,
+                            companyName: survey.company.name,
+                            status: survey.status,
+                            date: dayjs(survey.createdAt).format("DD-MM-YYYY HH:mm:ss"),
+                            username: survey.company.user.username,
                         }));
                     })
                     .catch((error) => {
                         console.log(error);
                     });
             },
+
+        downloadSurveys() {
+            const headersMap = {
+                Q_1: 'Q_1',
+                Q_2: 'Q_2',
+                Q_3: 'Q_3',
+                Q_4: 'Q_4',
+                Q_5: 'Q_5',
+                Q_6: 'Q_6',
+                Q_7: 'Q_7',
+                Q_8: 'Q_8',
+                Q_9: 'Q_9',
+                companyName: 'Nombre de la Compañía',
+                status: 'Estado',
+                date: 'Fecha de creación',
+                username: 'Encuestador',
+            };
+            const formattedRows = this.rows.map((row) => {
+                const formattedRow = {};
+                for (const key in row) {
+                    // Omitimos el campo "company"
+                    if (key !== 'company') {
+                        if (headersMap[key]) {
+                            formattedRow[headersMap[key]] = row[key]; // Asigna el valor con el nuevo nombre de campo
+                        } else {
+                            formattedRow[key] = row[key]; // Si no hay mapeo, conserva el nombre original
+                        }
+                    }
+                }
+                return formattedRow;
+            });
+
+            // Crea una nueva hoja de Excel con los encabezados modificados
+            const ws = XLSX.utils.json_to_sheet(formattedRows);
+
+            // Crea un libro de trabajo (workbook)
+            const wb = XLSX.utils.book_new();
+
+            // Agrega la hoja de Excel al libro de trabajo
+            XLSX.utils.book_append_sheet(wb, ws, "Encuestas");
+
+            // Descarga el archivo Excel
+            XLSX.writeFile(wb, "Encuestas.xlsx");
+},
         },
     };
 </script>
