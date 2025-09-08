@@ -395,8 +395,8 @@
                     Reprogramar llamado
                 </button>
                 <div class="col-span-2 mb-3">
-                    <label for="role" class="block mb-2 text-sm font-medium text-gray-900">Incidencia:</label>
-                    <select id="role"
+                    <label for="incidence" class="block mb-2 text-sm font-medium text-gray-900">Incidencia:</label>
+                    <select id="incidence"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 placeholder-gray-400 focus:ring-primary-500"
                         v-model="call.incidenceId">
                         <option value="" disabled selected>
@@ -404,6 +404,19 @@
                         </option>
                         <option v-for="incidence in incidents" :key="incidence.id" :value="incidence.id">
                             {{ incidence.description }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-span-2 mb-3" v-if="call.incidenceId == 13">
+                    <label for="rejection" class="block mb-2 text-sm font-medium text-gray-900">Motivo del rechazo:</label>
+                    <select id="rejection"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 placeholder-gray-400 focus:ring-primary-500"
+                        v-model="call.selectedSubStatus">
+                        <option value="" disabled selected>
+                            Seleccionar motivo del rechazo
+                        </option>
+                        <option v-for="option in subOptions1" :key="option.value" :value="option.value">
+                            {{ option.label }}
                         </option>
                     </select>
                 </div>
@@ -495,6 +508,7 @@
                     companyId: "",
                     incidenceId: "",
                     companyStreetUpdate: "",
+                    selectedSubStatus:"",
                     rescheduled: {
                         date: "",
                         time: ""
@@ -585,26 +599,30 @@
             },
             createCall(call, option) {
                 call.companyStreetUpdate = this.survey.companyStreetUpdate;
+                if (call.incidenceId === 13 && call.selectedSubStatus === "") {
+                    this.toast.error('Por favor, seleccione un motivo de rechazo antes de continuar.');
+                    return;  // Se detiene la ejecución aquí
+                }
                 if (option == 'agregar-incidencia') {
                     GlobalService.createData("/call/create-call", call)
-                        .then((response) => {
-                            this.toast.success(response.data.msg);
-                            this.calls = response.data.calls
-                            if (call.incidenceId != 1 && call.incidenceId != 2 && call.incidenceId != 3 && call.incidenceId != 4) {
-                                window.location.reload()
-                            }
-                        })
-                        .catch((e) => {
-                            let errors = e.response.data.errors;
-                            let error = e.response.data.error;
-                            console.log(errors)
-                            if (errors) {
-                                errors.forEach((error_element) => {
-                                    this.toast.error(error_element.msg);
-                                });
-                            } else {
-                                this.toast.error(error);
-                            }
+                            .then((response) => {
+                                this.toast.success(response.data.msg);
+                                this.calls = response.data.calls
+                                if (call.incidenceId != 1 && call.incidenceId != 2 && call.incidenceId != 3 && call.incidenceId != 4) {
+                                    window.location.reload()
+                                }
+                            })
+                            .catch((e) => {
+                                let errors = e.response.data.errors;
+                                let error = e.response.data.error;
+                                console.log(errors)
+                                if (errors) {
+                                    errors.forEach((error_element) => {
+                                        this.toast.error(error_element.msg);
+                                    });
+                                } else {
+                                    this.toast.error(error);
+                                }
                         })
                 }
                 if (option == 'no-desea-participar' || option == 'finalizar' || option == 'empresa-no-elegible') {
