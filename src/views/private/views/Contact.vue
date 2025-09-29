@@ -87,12 +87,6 @@
                             </div>
                         </div>
                     </div>
-                    <div v-if="!participate && survey.selectedMainStatus ==2 &&  survey.selectedSubStatus == ''"
-                        class="flex justify-center">
-                        <button @click="createCall(call, 'no-desea-participar')"
-                            class="w-full mt-4 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">No
-                            desea participar</button>
-                    </div>
                 </div>
                 <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div class="bg-white p-6 rounded-md w-5xl ml-20 max-h-[80vh] overflow-auto">
