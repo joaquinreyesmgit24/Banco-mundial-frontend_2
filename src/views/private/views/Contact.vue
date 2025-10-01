@@ -601,7 +601,7 @@
                     GlobalService.createData("/call/create-call", call)
                             .then((response) => {
                                 this.toast.success(response.data.msg);
-                                this.calls = response.data.calls
+                                this.getDataCalls(this.randomCompany.id)
                                 if (call.incidenceId != 1 && call.incidenceId != 2 && call.incidenceId != 3 && call.incidenceId != 4) {
                                     window.location.reload()
                                 }
