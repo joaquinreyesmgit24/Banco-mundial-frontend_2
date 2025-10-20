@@ -68,5 +68,15 @@ export default {
                 .then((response) => resolve(response.data))
                 .catch((err) => reject(err))
         }))
-    }
+    },
+    getFile(url) {
+        return new Promise((resolve, reject) => {
+            http
+                .get(`${url}`, {
+                    responseType: "blob", // 👈 importante: permite recibir archivos binarios
+                })
+                .then((response) => resolve(response))
+                .catch((err) => reject(err));
+        });
+    },
 }
