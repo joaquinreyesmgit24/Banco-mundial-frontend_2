@@ -31,10 +31,10 @@
                             <td class="px-6 py-3 first-letter-uppercase">{{ row.companyRut }}</td>
                             <td class="px-6 py-3 first-letter-uppercase">{{ row.companyName }}</td>
                             <td class="px-6 py-3 first-letter-uppercase">{{ row.companyCode }}</td>
-                            <td class="px-6 py-3 first-letter-uppercase">{{ row.Q_6 }}</td>
-                            <td class="px-6 py-3 first-letter-uppercase">{{ row.Q_7 }}</td>
-                            <td class="px-6 py-3 first-letter-uppercase">{{ row.Q_8 }}</td>
-                            <td class="px-6 py-3 first-letter-uppercase">{{ row.Q_9 }}</td>
+                            <td class="px-6 py-3 first-letter-uppercase">{{ row.q_6 }}</td>
+                            <td class="px-6 py-3 first-letter-uppercase">{{ row.q_7 }}</td>
+                            <td class="px-6 py-3 first-letter-uppercase">{{ row.q_8 }}</td>
+                            <td class="px-6 py-3 first-letter-uppercase">{{ row.q_9 }}</td>
                             <td class="px-6 py-3 first-letter-uppercase">{{ row.username }}</td>
                             <td class="px-6 py-3">{{ row.status }}</td>
                             <td class="px-6 py-3">{{ row.date }}</td>

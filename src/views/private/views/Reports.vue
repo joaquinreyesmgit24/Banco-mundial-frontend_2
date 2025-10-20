@@ -114,21 +114,21 @@ export default {
                 });
         },
         downloadReports() {
-           GlobalService.getFile("/report/download-reports")
-        .then((response) => {
-          const blob = new Blob([response.data], {
-            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-          });
-          const link = document.createElement("a");
-          link.href = window.URL.createObjectURL(blob);
-          link.download = "Reportes.xlsx";
-          link.click();
-          window.URL.revokeObjectURL(link.href);
-        })
-        .catch((error) => {
-          console.error("Error al descargar reportes:", error);
-          this.toast.error("Error al descargar el archivo de reportes.");
-        });
+                GlobalService.getFile("/report/download-reports")
+                .then((response) => {
+                const blob = new Blob([response.data], {
+                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                });
+                const link = document.createElement("a");
+                link.href = window.URL.createObjectURL(blob);
+                link.download = "Reportes.xlsx";
+                link.click();
+                window.URL.revokeObjectURL(link.href);
+                })
+                .catch((error) => {
+                console.error("Error al descargar reportes:", error);
+                this.toast.error("Error al descargar el archivo de reportes.");
+                });
         },
         changePage(page) {
             if (page < 1 || page > this.totalPages) return;
