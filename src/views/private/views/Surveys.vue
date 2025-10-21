@@ -20,6 +20,8 @@
                             <th class="px-6 py-3">Cargo del entrevistado</th>
                             <th class="px-6 py-3">Correo del entrevistado</th>
                             <th class="px-6 py-3">Celular del entrevistado</th>
+                            <th class="px-6 py-3">Fecha de agenda</th>
+                            <th class="px-6 py-3">Hora de agenda</th>
                             <th class="px-6 py-3">Encuestador</th>
                             <th class="px-6 py-3">Estado</th>
                             <th class="px-6 py-3">Fecha</th>
@@ -35,6 +37,8 @@
                             <td class="px-6 py-3 first-letter-uppercase">{{ row.q_7 }}</td>
                             <td class="px-6 py-3 first-letter-uppercase">{{ row.q_8 }}</td>
                             <td class="px-6 py-3 first-letter-uppercase">{{ row.q_9 }}</td>
+                            <td class="px-6 py-3 first-letter-uppercase">{{ row.q_4 }}</td>
+                            <td class="px-6 py-3 first-letter-uppercase">{{ row.q_5 }}</td>
                             <td class="px-6 py-3 first-letter-uppercase">{{ row.username }}</td>
                             <td class="px-6 py-3">{{ row.status }}</td>
                             <td class="px-6 py-3">{{ row.date }}</td>
