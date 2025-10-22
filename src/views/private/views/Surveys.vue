@@ -47,15 +47,41 @@
                 </table>
             </div>
             <!-- Paginación -->
-            <div class="flex justify-between items-center mt-4">
-                <button @click="changePage(currentPage - 1)" :disabled="currentPage <= 1" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none disabled:bg-gray-300">
+                        <div class="flex justify-between items-center mt-4 space-x-2">
+                <button 
+                    @click="changePage(1)" 
+                    :disabled="currentPage === 1" 
+                    class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none disabled:bg-gray-300"
+                >
+                    Primera
+                </button>
+
+                <button 
+                    @click="changePage(currentPage - 1)" 
+                    :disabled="currentPage <= 1" 
+                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none disabled:bg-gray-300"
+                >
                     Anterior
                 </button>
+
                 <span class="text-gray-700 dark:text-gray-300">
                     Página {{ currentPage }} de {{ totalPages }}
                 </span>
-                <button @click="changePage(currentPage + 1)" :disabled="currentPage >= totalPages" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none disabled:bg-gray-300">
+
+                <button 
+                    @click="changePage(currentPage + 1)" 
+                    :disabled="currentPage >= totalPages" 
+                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none disabled:bg-gray-300"
+                >
                     Siguiente
+                </button>
+
+                <button 
+                    @click="changePage(totalPages)" 
+                    :disabled="currentPage === totalPages" 
+                    class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none disabled:bg-gray-300"
+                >
+                    Última
                 </button>
             </div>
         </div>
