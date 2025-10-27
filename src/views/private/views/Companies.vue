@@ -27,7 +27,7 @@
                 </div>
             </div>
             <div class="flex justify-between items-center mb-4">
-                    <div class="text-2xl font-semibold mb-4">Empresa</div>
+                    <div class="text-xl font-semibold">Empresas</div>
                     <div>
                         <button type="button"
                             class="text-white bg-lime-500 hover:bg-lime-600 focus:ring-4 focus:outline-none focus:ring-violet-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-5"
@@ -42,72 +42,81 @@
                     </div>
             </div>
             <div class="overflow-x-auto">
-                <table class="min-w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <table class="min-w-full text-sm text-left text-gray-900 border border-gray-200">
+                    <thead class="text-xs uppercase bg-violet-700 text-gray-300">
                         <tr>
-                            <th class="px-6 py-3">Id</th>
+                            <th class="px-6 py-3">Rut</th>
                             <th class="px-6 py-3">Empresa</th>
-                            <th class="px-6 py-3">Estratificación región</th>
-                            <th class="px-6 py-3">Tamaño</th>
-                            <th class="px-6 py-3">Sector</th>
-                            <th class="px-6 py-3">Panel</th>
-                            <th class="px-6 py-3">Código de elegibilidad</th>
-                            <th class="px-6 py-3">Código de estado</th>
-                            <th class="px-6 py-3">Código de rechazo</th>
-                            <th class="px-6 py-3">Dirección</th>
+                            <th class="px-6 py-3">Calle</th>
                             <th class="px-6 py-3">Teléfonos</th>
-                            <th class="px-6 py-3">Encuestador</th>
-                            <th class="px-6 py-3">Fecha</th>
+                            <th class="px-6 py-3">Ubicación de la muestra</th>
+                            <th class="px-6 py-3">Correo</th>
+                            <th class="px-6 py-3">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="row in rows" :key="row.id" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 lowercase">
-                            <td class="px-6 py-3">{{ row.id }}</td>
-                            <td class="px-6 py-3">{{ row.companyName }}</td>
-                            <td class="px-6 py-3">{{ row.nameStratificationRegion }}</td>
-                            <td class="px-6 py-3">{{ row.nameSizeStratification }}</td>
-                            <td class="px-6 py-3">{{ row.nameStratificationSector }}</td>
-                            <td class="px-6 py-3">{{ row.panelName }}</td>
-                            <td class="px-6 py-3">{{ row.eligibilityCode }}</td>
-                            <td class="px-6 py-3">{{ row.statusCode }}</td>
-                            <td class="px-6 py-3">{{ row.rejectionCode }}</td>
-                            <td class="px-6 py-3">{{ row.address }}</td>
+                        <tr v-for="row in rows" :key="row.id" class="bg-white border-b hover:bg-gray-50 lowercase">
+                            <td class="px-6 py-3">{{ row.rut }}</td>
+                            <td class="px-6 py-3 first-letter-uppercase">{{ row.name }}</td>
+                            <td class="px-6 py-3 first-letter-uppercase">{{ row.street }}</td>
                             <td class="px-6 py-3">{{ row.phoneNumberOne }} / {{ row.phoneNumberSecond }}</td>
-                            <td class="px-6 py-3">{{ row.username }}</td>
-                            <td class="px-6 py-3">{{ row.date }}</td>
+                            <td class="px-6 py-3 first-letter-uppercase">{{ row.sampleLocation}}</td>
+                            <td class="px-6 py-3">{{ row.emailAddress }} </td>
+                            <td class="px-6 py-3">
+                                <button type="button"
+                                    class="text-white bg-violet-700 hover:bg-violet-800 focus:ring-4 focus:outline-none focus:ring-violet-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3"
+                                    data-bs-toggle="modal" data-bs-target="#modalUpdateCompany"
+                                    @click="openUpdateCompanyModal(row)">
+                                    Editar
+                                </button>
+                                <button type="button"
+                                    class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-violet-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                                    @click="openDeleteCompanyAlert(row)">
+                                    Eliminar
+                                </button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+            <!-- Paginación -->
+            <div class="flex justify-between items-center mt-4 space-x-2">
+                <button 
+                    @click="changePage(1)" 
+                    :disabled="currentPage === 1" 
+                    class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none disabled:bg-gray-300"
+                >
+                    Primera
+                </button>
 
+                <button 
+                    @click="changePage(currentPage - 1)" 
+                    :disabled="currentPage <= 1" 
+                    class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none disabled:bg-gray-300"
+                >
+                    Anterior
+                </button>
 
-            <!-- <VueGoodTable :columns="columns" :rows="rows" :search-options="searchOptions"
-                :pagination-options="paginationOptions" max-height="450px" :fixed-header="true">
-                <template v-slot:table-row="props">
-                    <span v-if="props.column.field == 'acciones'">
-                        <button type="button"
-                            class="text-white bg-violet-700 hover:bg-violet-800 focus:ring-4 focus:outline-none focus:ring-violet-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3"
-                            data-bs-toggle="modal" data-bs-target="#modalUpdateCompany"
-                            @click="openUpdateCompanyModal(props.row)">
-                            Editar
-                        </button>
-                        <button type="button"
-                            class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-violet-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                            @click="openDeleteCompanyAlert(props.row)">
-                            Eliminar
-                        </button>
-                    </span>
-                    <span v-if="props.column.field == 'role'">
-                        {{ props.row.role.name }}
-                    </span>
-                </template>
-                <template v-slot:emptystate>
-                    <div style="text-align: center">No hay datos disponibles</div>
-                </template>
-            </VueGoodTable> -->
+                <span class="text-gray-700 dark:text-gray-300">
+                    Página {{ currentPage }} de {{ totalPages }}
+                </span>
 
+                <button 
+                    @click="changePage(currentPage + 1)" 
+                    :disabled="currentPage >= totalPages" 
+                    class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none disabled:bg-gray-300"
+                >
+                    Siguiente
+                </button>
 
-
+                <button 
+                    @click="changePage(totalPages)" 
+                    :disabled="currentPage === totalPages || totalPages==0" 
+                    class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none disabled:bg-gray-300"
+                >
+                    Última
+                </button>
+            </div>
             <div v-if="showCompanyDeleteAlert" class="fixed z-10 inset-0 overflow-y-auto">
                 <div class="flex items-center justify-center min-h-screen">
                     <div class="fixed inset-0 transition-opacity" @click="closeDeleteCompanyAlert" aria-hidden="true">
@@ -626,49 +635,11 @@ export default {
             showCompanyDeleteAlert: false,
             nextCompanyCreateModal: true,
             nextCompanyUpdateModal: true,
-            searchOptions: {
-                enabled: true,
-                placeholder: "Buscar",
-            },
-            paginationOptions: {
-                enabled: true,
-                perPage: 5,
-                nextLabel: "Siguiente",
-                prevLabel: "Anterior",
-                rowsPerPageLabel: "Filas por página",
-                paginationComplete: false,
-                ofLabel: "de",
-                allLabel: 'Todo',
-            },
             toast: useToast(),
-            columns: [
-                {
-                    label: "Rut",
-                    field: "rut",
-                },
-                {
-                    label: "Empresa",
-                    field: "name",
-                },
-                {
-                    label: "Ubicación de la muestra",
-                    field: "sampleLocation",
-                },
-                {
-                    label: "Número de teléfono 1",
-                    field: "phoneNumberOne",
-                },
-                {
-                    label: "Correo",
-                    field: "emailAddress",
-                },
-                {
-                    label: "Acciones",
-                    field: "acciones",
-                    type: "slots",
-                },
-            ],
             rows: [],
+            currentPage: 1,
+            totalCompanies: 0,
+            perPage: 5,
             sampleSizes: [],
             sampleSectors: [],
             panels: [],
@@ -763,7 +734,17 @@ export default {
         this.getDataPanels();
         this.getDataRegions();
     },
+    computed: {
+        totalPages() {
+            return Math.ceil(this.totalCompanies / this.perPage);
+        }
+    },
     methods: {
+        changePage(page) {
+            if (page < 1 || page > this.totalPages) return;
+            this.currentPage = page;
+            this.getDataCompanies();
+        },
         uploadFile() {
             if (this.selectedFile) {
                 const formData = new FormData();
@@ -804,7 +785,7 @@ export default {
             this.showCompanyDeleteAlert = false;
         },
         getDataCompanies() {
-            GlobalService.getData("/company/list-companies")
+            GlobalService.getData(`/company/list-companies?page=${this.currentPage}&perPage=${this.perPage}`)
                 .then((response) => {
                     this.rows = response.companies.map((company) => ({
                         id: company.id,
@@ -834,6 +815,7 @@ export default {
                         web: company.web,
                         use: company.use
                     }));
+                    this.totalCompanies = response.pagination.totalCompanies;
                 })
                 .catch((error) => {
                     console.log(error);
@@ -877,7 +859,7 @@ export default {
                 });
         },
         createCompany(createdCompany) {
-            GlobalService.createData("/company/create-company", createdCompany)
+            GlobalService.createData(`/company/create-company?page=${this.currentPage}&perPage=${this.perPage}`, createdCompany)
                 .then((response) => {
                     this.toast.success(response.data.msg);
                     this.rows = response.data.companies.map((company) => ({
@@ -908,6 +890,7 @@ export default {
                         web: company.web,
                         use: company.use
                     }));
+                    this.totalCompanies = response.data.pagination.totalCompanies;
                     this.closeCreateCompanyModal()
                 })
                 .catch((e) => {
@@ -924,8 +907,7 @@ export default {
                 });
         },
         updateCompany(companyId, editedCompany) {
-            console.log(companyId, editedCompany)
-            GlobalService.setData("/company/update-company", companyId, editedCompany)
+            GlobalService.setData("/company/update-company", companyId, `?page=${this.currentPage}&perPage=${this.perPage}`, editedCompany)
                 .then((response) => {
                     this.toast.success(response.msg);
                     this.rows = response.companies.map((company) => ({
@@ -956,6 +938,7 @@ export default {
                         web: company.web,
                         use: company.use
                     }));
+                    this.totalCompanies = response.pagination.totalCompanies;
                     this.closeUpdateCompanyModal()
                 })
                 .catch((e) => {
@@ -972,10 +955,17 @@ export default {
                 });
         },
         deleteCompany(companyId) {
-            console.log(companyId)
-            GlobalService.deleteDataById("/company/delete-company", companyId)
+            GlobalService.deleteDataById(`/company/delete-company`,companyId,`?page=${this.currentPage}&perPage=${this.perPage}`)
                 .then((response) => {
                     this.toast.success(response.msg);
+                    if (response.companies.length === 0 && this.currentPage > 1) {
+                        this.currentPage--;
+                        // Volvemos a cargar los datos con la nueva página
+                        this.getDataCompanies();
+                        this.closeDeleteCompanyAlert()
+                        return;
+                    }
+
                     this.rows = response.companies.map((company) => ({
                         id: company.id,
                         code: company.code,
@@ -1004,6 +994,7 @@ export default {
                         web: company.web,
                         use: company.use
                     }));
+                    this.totalCompanies = response.pagination.totalCompanies;
                     this.closeDeleteCompanyAlert()
                 })
                 .catch((e) => {
@@ -1034,4 +1025,19 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse; /* Asegura que las celdas no tengan bordes adicionales */
+    }
+
+    th, td {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        height: 65px !important;
+    }
+
+    .first-letter-uppercase::first-letter {
+        text-transform: uppercase;
+    }
+</style>

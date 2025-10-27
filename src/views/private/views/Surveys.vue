@@ -7,10 +7,10 @@
                     Descargar Encuestas (Excel)
                 </button>
             </div>
-                         <!-- Tabla -->
+            <!-- Tabla -->
             <div class="overflow-x-auto">
-                <table class="min-w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <table class="min-w-full text-sm text-left text-gray-900 border border-gray-200">
+                    <thead class="text-xs uppercase bg-violet-700 text-gray-300">
                         <tr>
                             <th class="px-6 py-3">Id</th>
                             <th class="px-6 py-3">Rut de la empresa</th>
@@ -28,7 +28,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="row in rows" :key="row.id" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 lowercase">
+                        <tr v-for="row in rows" :key="row.id" class="bg-white border-b hover:bg-gray-50 lowercase">
                             <td class="px-6 py-3 first-letter-uppercase">{{ row.id }}</td>
                             <td class="px-6 py-3 first-letter-uppercase">{{ row.companyRut }}</td>
                             <td class="px-6 py-3 first-letter-uppercase">{{ row.companyName }}</td>
@@ -47,7 +47,7 @@
                 </table>
             </div>
             <!-- Paginación -->
-                        <div class="flex justify-between items-center mt-4 space-x-2">
+            <div class="flex justify-between items-center mt-4 space-x-2">
                 <button 
                     @click="changePage(1)" 
                     :disabled="currentPage === 1" 
@@ -59,7 +59,7 @@
                 <button 
                     @click="changePage(currentPage - 1)" 
                     :disabled="currentPage <= 1" 
-                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none disabled:bg-gray-300"
+                    class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none disabled:bg-gray-300"
                 >
                     Anterior
                 </button>
@@ -71,14 +71,14 @@
                 <button 
                     @click="changePage(currentPage + 1)" 
                     :disabled="currentPage >= totalPages" 
-                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none disabled:bg-gray-300"
+                    class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none disabled:bg-gray-300"
                 >
                     Siguiente
                 </button>
 
                 <button 
                     @click="changePage(totalPages)" 
-                    :disabled="currentPage === totalPages" 
+                    :disabled="currentPage === totalPages || totalPages==0" 
                     class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none disabled:bg-gray-300"
                 >
                     Última
@@ -91,7 +91,7 @@
 <script>
 import GlobalService from "../../../services/GlobalServices";
 import dayjs from "dayjs"; // Importa dayjs
-import * as XLSX from "xlsx"; // Importa la librería de xlsx
+
     export default {
         name: "list-surveys",
         data() {
@@ -133,7 +133,7 @@ import * as XLSX from "xlsx"; // Importa la librería de xlsx
                             date: dayjs(survey.createdAt).format("DD-MM-YYYY HH:mm:ss"),
                             username: survey.company.user.username,
                         }));
-                         this.totalSurveys = response.pagination.totalSurveys;
+                        this.totalSurveys = response.pagination.totalSurveys;
                     })
                     .catch((error) => {
                         console.log(error);
@@ -177,7 +177,7 @@ table {
 th, td {
     overflow: hidden;
     text-overflow: ellipsis;
-    height: 100px;
+    height: 65px !important;
 }
 
 .first-letter-uppercase::first-letter {

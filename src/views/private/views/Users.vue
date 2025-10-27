@@ -1,38 +1,87 @@
 <template>
     <div class="grid grid-cols-1 gap-6 mb-6">
         <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
-            <div class="flex">
+            <div class="flex justify-between items-center mb-4">
+                <div class="text-xl font-semibold">Usuarios</div>
                 <button type="button"
                     class="text-white bg-lime-500 hover:bg-lime-600 focus:ring-4 focus:outline-none focus:ring-violet-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ml-auto"
                     data-bs-toggle="modal" data-bs-target="#modalCreateUser" @click="openCreateUserModal()">
                     Agregar
                 </button>
             </div>
-            <div class="text-2xl font-semibold mb-4">Usuarios</div>
-            <VueGoodTable :columns="columns" :rows="rows" :search-options="searchOptions"
-                :pagination-options="paginationOptions" max-height="450px">
-                <template v-slot:table-row="props">
-                    <span v-if="props.column.field == 'acciones'">
-                        <button type="button"
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-sm text-left text-gray-900 border border-gray-200">
+                    <thead class="text-xs uppercase bg-violet-700 text-gray-300">
+                        <tr>
+                            <th class="px-6 py-3">Nombre de usuario</th>
+                            <th class="px-6 py-3">Rol</th>
+                            <th class="px-6 py-3">Fecha de creación</th>
+                            <th class="px-6 py-3">Estado</th>
+                            <th class="px-6 py-3">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="row in rows" :key="row.id" class="bg-white border-b hover:bg-gray-50">
+                            <td class="px-6 py-3">{{ row.username }}</td>
+                            <td class="px-6 py-3">{{ row.role.name }}</td>
+                            <td class="px-6 py-3">{{ row.date }}</td>
+                            <td class="px-6 py-3">{{ row.status }}</td>
+                            <td class="px-6 py-3">
+                                <button type="button"
                             class="text-white bg-violet-700 hover:bg-violet-800 focus:ring-4 focus:outline-none focus:ring-violet-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3"
                             data-bs-toggle="modal" data-bs-target="#modalUpdateUser"
-                            @click="openUpdateUserModal(props.row)">
+                            @click="openUpdateUserModal(row)">
                             Editar
                         </button>
                         <button type="button"
                             class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-violet-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                            @click="openDeleteUserAlert(props.row)">
+                            @click="openDeleteUserAlert(row)">
                             Eliminar
                         </button>
-                    </span>
-                    <span v-if="props.column.field == 'role'">
-                        {{ props.row.role.name }}
-                    </span>
-                </template>
-                <template v-slot:emptystate>
-                    <div style="text-align: center">No hay datos disponibles</div>
-                </template>
-            </VueGoodTable>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Paginación -->
+            <div class="flex justify-between items-center mt-4 space-x-2">
+                <button 
+                    @click="changePage(1)" 
+                    :disabled="currentPage === 1" 
+                    class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none disabled:bg-gray-300"
+                >
+                    Primera
+                </button>
+
+                <button 
+                    @click="changePage(currentPage - 1)" 
+                    :disabled="currentPage <= 1" 
+                    class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none disabled:bg-gray-300"
+                >
+                    Anterior
+                </button>
+
+                <span class="text-gray-700 dark:text-gray-300">
+                    Página {{ currentPage }} de {{ totalPages }}
+                </span>
+
+                <button 
+                    @click="changePage(currentPage + 1)" 
+                    :disabled="currentPage >= totalPages" 
+                    class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none disabled:bg-gray-300"
+                >
+                    Siguiente
+                </button>
+
+                <button 
+                    @click="changePage(totalPages)" 
+                    :disabled="currentPage === totalPages || totalPages==0" 
+                    class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none disabled:bg-gray-300"
+                >
+                    Última
+                </button>
+            </div>
             <div v-if="showUserDeleteAlert" class="fixed z-10 inset-0 overflow-y-auto">
                 <div class="flex items-center justify-center min-h-screen">
                     <div class="fixed inset-0 transition-opacity" @click="closeDeleteUserAlert" aria-hidden="true">
@@ -235,33 +284,10 @@
                     allLabel: 'Todo',
                 },
                 toast: useToast(),
-                columns: [
-                    {
-                        label: "Nombre de usuario",
-                        field: "username",
-                    },
-                    {
-                        label: "Rol",
-                        field: "role",
-                    },
-                    {
-                        label: "Fecha de creación",
-                        field: "date",
-                        type: "date",
-                        dateInputFormat: "dd-MM-yyyy HH:mm:ss",
-                        dateOutputFormat: "dd-MM-yyyy",
-                    },
-                    {
-                        label: "Estado",
-                        field: "status",
-                    },
-                    {
-                        label: "Acciones",
-                        field: "acciones",
-                        type: "slots",
-                    },
-                ],
                 rows: [],
+                currentPage: 1,
+                totalUsers: 0,
+                perPage: 5,
                 roles: [],
                 editedUser: {
                     id:"",
@@ -294,6 +320,11 @@
         mounted() {
             this.getDataUsers();
             this.getDataRoles();
+        },
+        computed: {
+            totalPages() {
+                return Math.ceil(this.totalUsers / this.perPage);
+            }
         },
         methods: {
             updatehandleFileChange(event){
@@ -329,7 +360,7 @@
                 this.showUserDeleteAlert = false;
             },
             getDataUsers() {
-                GlobalService.getData("/auth/list-users")
+                GlobalService.getData(`/auth/list-users?page=${this.currentPage}&perPage=${this.perPage}`)
                     .then((response) => {
                         this.rows = response.users.map((user) => ({
                             id: user.id,
@@ -338,6 +369,7 @@
                             date: dayjs(user.createdAt).format("DD-MM-YYYY HH:mm:ss"),
                             status: user.status ? "Activo" : "Inactivo",
                         }));
+                        this.totalUsers = response.pagination.totalUsers;
                     })
                     .catch((error) => {
                         console.log(error);
@@ -362,7 +394,7 @@
                 if (createdUser.file) {
                     formData.append('file', createdUser.file);
                 }
-                GlobalService.createDataImage("/auth/create-user", formData)
+                GlobalService.createDataImage(`/auth/create-user?page=${this.currentPage}&perPage=${this.perPage}`, formData)
                     .then((response) => {
                         this.toast.success(response.data.msg);
                         this.rows = response.data.users.map((user) => ({
@@ -372,6 +404,7 @@
                             date: dayjs(user.createdAt).format("DD-MM-YYYY HH:mm:ss"),
                             status: user.status ? "Activo" : "Inactivo",
                         }));
+                        this.totalUsers = response.data.pagination.totalUsers;
                         this.closeCreateUserModal()
                     })
                     .catch((e) => {
@@ -397,9 +430,8 @@
                 if(editedUser.file){
                     formData.append('file', editedUser.file);
                 }
-                GlobalService.setDataImage("/auth/update-user", userId, formData)
+                GlobalService.setDataImage(`/auth/update-user`, userId,`?page=${this.currentPage}&perPage=${this.perPage}`, formData)
                     .then((response) => {
-                        console.log(editedUser)
                         this.toast.success(response.msg);
                         this.rows = response.users.map((user) => ({
                             id: user.id,
@@ -408,6 +440,7 @@
                             date: dayjs(user.createdAt).format("DD-MM-YYYY HH:mm:ss"),
                             status: user.status ? "Activo" : "Inactivo",
                         }));
+                        this.totalUsers = response.pagination.totalUsers;
                         this.closeUpdateUserModal()
                     })
                     .catch((e) => {
@@ -423,9 +456,17 @@
                     });
             },
             deleteUser(userId) {
-                GlobalService.deleteDataById("/auth/delete-user", userId)
+                GlobalService.deleteDataById(`/auth/delete-user`,userId, `?page=${this.currentPage}&perPage=${this.perPage}`)
                     .then((response) => {
                         this.toast.success(response.msg);
+                        if (response.users.length === 0 && this.currentPage > 1) {
+                            this.currentPage--;
+                            // Volvemos a cargar los datos con la nueva página
+                            this.getDataUsers();
+                            this.closeDeleteUserAlert()
+                            return;
+                        }
+
                         this.rows = response.users.map((user) => ({
                             id: user.id,
                             username: user.username,
@@ -433,6 +474,7 @@
                             date: dayjs(user.createdAt).format("DD-MM-YYYY HH:mm:ss"),
                             status: user.status ? "Activo" : "Inactivo",
                         }));
+                        this.totalUsers = response.pagination.totalUsers;
                         this.closeDeleteUserAlert()
                     })
                     .catch((e) => {
@@ -446,10 +488,29 @@
                             this.toast.error(error);
                         }
                     });
-            }
+            },
+            changePage(page) {
+                if (page < 1 || page > this.totalPages) return;
+                this.currentPage = page;
+                this.getDataUsers();
+        },
         },
     };
 </script>
 
 <style>
+table {
+    width: 100%;
+    border-collapse: collapse; /* Asegura que las celdas no tengan bordes adicionales */
+}
+
+th, td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 65px !important;
+}
+
+.first-letter-uppercase::first-letter {
+    text-transform: uppercase;
+}
 </style>

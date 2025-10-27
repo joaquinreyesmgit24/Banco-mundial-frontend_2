@@ -8,9 +8,9 @@ export default {
                 .catch((err) => reject(err))
         }))
     },
-    setData(url, id, form) {
+    setData(url, id,query, form) {
         return new Promise(((resolve, reject) => {
-            http.put(`${url}/${id}`, form)
+            http.put(`${url}/${id}${query}`, form)
                 .then((response) => resolve(response.data))
                 .catch((err) => reject(err))
         }))
@@ -44,9 +44,9 @@ export default {
             .catch((err) => reject(err))
         }))
       },
-    setDataImage(url, id, form) {
+    setDataImage(url, id, query, form) {
         return new Promise(((resolve, reject) => {
-            http.put(`${url}/${id}`, form, {
+            http.put(`${url}/${id}${query}`, form, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -55,9 +55,9 @@ export default {
                 .catch((err) => reject(err))
         }))
     },
-    deleteDataById(url, id) {
+    deleteDataById(url, id, query) {
         return new Promise(((resolve, reject) => {
-            http.delete(`${url}/${id}`)
+            http.delete(`${url}/${id}${query}`)
                 .then((response) => resolve(response.data))
                 .catch((err) => reject(err))
         }))
