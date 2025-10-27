@@ -1,7 +1,7 @@
 <template>
     <div class="grid grid-cols-1 gap-6 mb-6">
         <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
-            <div class="w-full py-9 bg-gray-50 rounded-2xl border border-gray-300 gap-3 grid border-dashed">
+            <div class="w-full py-9 bg-gray-50 rounded-2xl border border-gray-300 gap-3 grid border-dashed mb-5">
                 <div class="grid gap-1">
                     <svg class="mx-auto" width="40" height="40" viewBox="0 0 40 40" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
@@ -26,23 +26,62 @@
                     </div>
                 </div>
             </div>
-            <div class="flex mt-5">
-                <div class="ml-auto">
-                    <button type="button"
-                        class="text-white bg-lime-500 hover:bg-lime-600 focus:ring-4 focus:outline-none focus:ring-violet-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-5"
-                        @click="uploadFile()">
-                        subir archivo
-                    </button>
-                    <button type="button"
-                        class="text-white bg-lime-500 hover:bg-lime-600 focus:ring-4 focus:outline-none focus:ring-violet-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                        data-bs-toggle="modal" data-bs-target="#modalCreateCompany" @click="openCreateCompanyModal()">
-                        Agregar
-                    </button>
-                </div>
-
+            <div class="flex justify-between items-center mb-4">
+                    <div class="text-2xl font-semibold mb-4">Empresa</div>
+                    <div>
+                        <button type="button"
+                            class="text-white bg-lime-500 hover:bg-lime-600 focus:ring-4 focus:outline-none focus:ring-violet-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-5"
+                            @click="uploadFile()">
+                            subir archivo
+                        </button>
+                        <button type="button"
+                            class="text-white bg-lime-500 hover:bg-lime-600 focus:ring-4 focus:outline-none focus:ring-violet-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                            data-bs-toggle="modal" data-bs-target="#modalCreateCompany" @click="openCreateCompanyModal()">
+                            Agregar
+                        </button>
+                    </div>
             </div>
-            <div class="text-2xl font-semibold mb-4">Empresa</div>
-            <VueGoodTable :columns="columns" :rows="rows" :search-options="searchOptions"
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th class="px-6 py-3">Id</th>
+                            <th class="px-6 py-3">Empresa</th>
+                            <th class="px-6 py-3">Estratificación región</th>
+                            <th class="px-6 py-3">Tamaño</th>
+                            <th class="px-6 py-3">Sector</th>
+                            <th class="px-6 py-3">Panel</th>
+                            <th class="px-6 py-3">Código de elegibilidad</th>
+                            <th class="px-6 py-3">Código de estado</th>
+                            <th class="px-6 py-3">Código de rechazo</th>
+                            <th class="px-6 py-3">Dirección</th>
+                            <th class="px-6 py-3">Teléfonos</th>
+                            <th class="px-6 py-3">Encuestador</th>
+                            <th class="px-6 py-3">Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="row in rows" :key="row.id" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 lowercase">
+                            <td class="px-6 py-3">{{ row.id }}</td>
+                            <td class="px-6 py-3">{{ row.companyName }}</td>
+                            <td class="px-6 py-3">{{ row.nameStratificationRegion }}</td>
+                            <td class="px-6 py-3">{{ row.nameSizeStratification }}</td>
+                            <td class="px-6 py-3">{{ row.nameStratificationSector }}</td>
+                            <td class="px-6 py-3">{{ row.panelName }}</td>
+                            <td class="px-6 py-3">{{ row.eligibilityCode }}</td>
+                            <td class="px-6 py-3">{{ row.statusCode }}</td>
+                            <td class="px-6 py-3">{{ row.rejectionCode }}</td>
+                            <td class="px-6 py-3">{{ row.address }}</td>
+                            <td class="px-6 py-3">{{ row.phoneNumberOne }} / {{ row.phoneNumberSecond }}</td>
+                            <td class="px-6 py-3">{{ row.username }}</td>
+                            <td class="px-6 py-3">{{ row.date }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+            <!-- <VueGoodTable :columns="columns" :rows="rows" :search-options="searchOptions"
                 :pagination-options="paginationOptions" max-height="450px" :fixed-header="true">
                 <template v-slot:table-row="props">
                     <span v-if="props.column.field == 'acciones'">
@@ -65,7 +104,10 @@
                 <template v-slot:emptystate>
                     <div style="text-align: center">No hay datos disponibles</div>
                 </template>
-            </VueGoodTable>
+            </VueGoodTable> -->
+
+
+
             <div v-if="showCompanyDeleteAlert" class="fixed z-10 inset-0 overflow-y-auto">
                 <div class="flex items-center justify-center min-h-screen">
                     <div class="fixed inset-0 transition-opacity" @click="closeDeleteCompanyAlert" aria-hidden="true">

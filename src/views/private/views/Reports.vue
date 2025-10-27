@@ -2,7 +2,7 @@
     <div class="grid grid-cols-1 gap-6 mb-6">
         <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
             <div class="flex justify-between items-center mb-4">
-                <div class="text-xl font-semibold mb-4">Reportes</div>
+                <div class="text-xl font-semibold">Reportes</div>
                 <button class="text-white inline-flex items-center bg-lime-500 hover:bg-lime-600 focus:ring-4 focus:outline-none focus:ring-violet-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center" @click="downloadReports">
                     Descargar Reportes (Excel)
                 </button>
