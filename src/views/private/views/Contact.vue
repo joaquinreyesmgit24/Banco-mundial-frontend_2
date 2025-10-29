@@ -92,7 +92,13 @@
                     <div class="bg-white p-6 rounded-md w-5xl ml-20 max-h-[80vh] overflow-auto">
                         <div class="col-span-2 mb-3"
                             v-if="call.incidenceId == 1 || call.incidenceId === 2 || call.incidenceId === 3 || call.incidenceId === 4">
-                            <label for="participate" class="block mb-2 text-sm font-medium text-gray-900">¿Quiere
+                                <div class="flex items-center justify-center h-[30px] text-[18px] text-gray-700 font-bold border-b-2 border-gray-700">
+                                        Nombre de la empresa: {{ randomCompany.name }}
+                                </div>
+                        </div>
+                        <div class="col-span-2 mb-3"
+                            v-if="call.incidenceId == 1 || call.incidenceId === 2 || call.incidenceId === 3 || call.incidenceId === 4">
+                            <label for="participate" class="block text-gray-700 text-sm font-bold mb-2">¿Quiere
                                 participar
                                 del estudio?</label>
                             <input type="checkbox" @change="handleParticipateChange" id="participate"
