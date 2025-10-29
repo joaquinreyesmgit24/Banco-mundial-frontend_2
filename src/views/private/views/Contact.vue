@@ -24,7 +24,6 @@
                             número:</label>
                         <div class="flex">
                             <div class="mr-4">
-                                {{ randomCompany }}
                                 <div
                                     v-if="randomCompany.phoneNumberOne && randomCompany.numberPhoneCallsOne>0">
                                     <input type="radio" name="number" :value="randomCompany.phoneNumberOne"
