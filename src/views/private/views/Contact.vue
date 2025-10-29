@@ -24,8 +24,9 @@
                             número:</label>
                         <div class="flex">
                             <div class="mr-4">
+                                {{ randomCompany }}
                                 <div
-                                    v-if="randomCompany.phoneNumberOne && randomCompany.numberPhoneCallsOne>0 && randomCompany.numberPhoneCallsOne>randomCompany.callsByPhoneOne">
+                                    v-if="randomCompany.phoneNumberOne && randomCompany.numberPhoneCallsOne>0">
                                     <input type="radio" name="number" :value="randomCompany.phoneNumberOne"
                                         v-model="call.phone">
                                     {{ randomCompany.phoneNumberOne }}
@@ -33,7 +34,7 @@
                             </div>
                             <div>
                                 <div
-                                    v-if="randomCompany.phoneNumberSecond && randomCompany.numberPhoneCallsSecond>0 && randomCompany.numberPhoneCallsSecond>randomCompany.callsByPhoneTwo">
+                                    v-if="randomCompany.phoneNumberSecond && randomCompany.numberPhoneCallsSecond>0">
                                     <input type="radio" name="number" :value="randomCompany.phoneNumberSecond"
                                         v-model="call.phone">
                                     {{ randomCompany.phoneNumberSecond }}
